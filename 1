@@ -1,0 +1,67 @@
+#include <iostream>
+#include <stack>
+#include "Header.h"
+using namespace std;
+
+void push(elem*& stack, int val)
+{
+    elem* newel = new elem;
+    newel->value = val;
+    newel->next = stack;
+    stack = newel;
+}
+char* peek(elem*& stack)
+{
+
+    if (!stack) return  nullptr;
+    return &stack->value;
+}
+bool pop(elem*& stack, int& value)
+{
+    if (!stack)return false;
+    elem* rem = stack;
+    value = stack->value;
+    stack = stack->next;
+    delete rem;
+    return true;
+}
+bool balanced(const string& s) {
+    stack<char> stack;
+    for (char c : s) {
+        switch (c) {
+
+        case '(': stack.push(')'); break;
+        case '[': stack.push(']'); break;
+        case '{': stack.push('}'); break;
+        case '<': stack.push('>'); break;
+
+        case ')':
+        case ']':
+        case '}':
+        case '>':
+            if (stack.empty() || stack.top() != c) {
+                return false;
+            }
+            stack.pop();
+            break;
+        default:
+            break;
+        }
+    }
+    return stack.empty();
+}
+
+void test(const string& s) {
+    std::cout << '"' << s << "\" " << (balanced(s) ? "yes" : "no") << '\n';
+}
+
+
+int main() {
+    elem* stack = nullptr;
+    test("");
+    test("a(b[c]d)e");
+    test("a(b[c)d]e");
+    test("a(b[c]d");
+    test("b[c]d)e");
+}
+
